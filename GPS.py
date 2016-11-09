@@ -42,6 +42,15 @@ while True:
         minutes = get_double(2)
         seconds = get_double(4)
         print"time:  ", hours,":",minutes,":",seconds
+
+        # Date
+        day = get_double(6)
+        months = get_double(8)
+        years = get_double(12)
+        print "Date:",day,"/",months,"/",years
+
+
+
 	# Headind
         heading = float(get_single(44))*100
         heading += float(get_single(45))*10
