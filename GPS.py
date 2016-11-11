@@ -50,8 +50,8 @@ while True:
         day = float(get_double(6))
         months =float(get_double(8))
         years = float(get_double(12))
-        date = "%.0f-%0.f-%.0f"%(day,months,years)
-	print 'Date: ', date
+        date_gps = "%.0f-%0.f-%.0f"%(day,months,years)
+	print 'Date: ', date_gps
 
 	# Headind
         heading = float(get_single(44))*100
@@ -83,7 +83,8 @@ while True:
         longitude ="%.0f%.5f %s" %(longitude_degrees,longitude_minutes,longitude_direction)
 	print 'longitude: ',longitude
 	print "\n\n"
-        cursor.execute(''' INSERT INTO  data (time , date , latitude , longitude , heading) VALUES (%s,%s,%s,%s,%s) ''',(time_gps, date, latitude, longitude, heading))
+        cursor.execute(''' INSERT INTO `data`(`time`, `date`, `latitude-degrees`, `latitude-minutes`, `latitude-direction`, `longitude-degrees`, `longitude-minutes`, `longitude-direction`, `heading`) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s ) ''',(time_gps, date_gps, latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction, heading))
+
 
         database.commit()
 
