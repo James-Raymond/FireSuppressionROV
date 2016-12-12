@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 
 #James Raymond 
 #GPS interfaceing code I2C 
@@ -50,7 +50,7 @@ while True:
         day = float(get_double(6))
         months =float(get_double(8))
         years = float(get_double(12))
-        date_gps = "%.0f-%0.f-%.0f"%(day,months,years)
+        date_gps = "%.0f-%0.f-%.0f"%(years,months,day)
 	print 'Date: ', date_gps
 
 	# Headind
