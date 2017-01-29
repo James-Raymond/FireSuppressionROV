@@ -12,8 +12,8 @@ address = 0x68	#I2C address (A0 & A1 jumpers ON)
 database = MySQLdb.connect(host='localhost',user='root',passwd='root',db='GPS')# link to database
 
 cursor = database.cursor()
+id
 
-			
 # single register from GPM.S
 def get_single(register):
 	try:
@@ -83,8 +83,8 @@ while True:
         longitude ="%.0f%.5f %s" %(longitude_degrees,longitude_minutes,longitude_direction)
 	print 'longitude: ',longitude
 	print "\n\n"
-        cursor.execute(''' INSERT INTO `data`(`time`, `date`, `latitude-degrees`, `latitude-minutes`, `latitude-direction`, `longitude-degrees`, `longitude-minutes`, `longitude-direction`, `heading`) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s ) ''',(time_gps, date_gps, latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction, heading))
-
+        cursor.execute(''' INSERT INTO `data`( `id`,`time`, `date`, `latitude-degrees`, `latitude-minutes`, `latitude-direction`, `longitude-degrees`, `longitude-minutes`, `longitude-direction`, `heading`) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s ) ''',(id,time_gps, date_gps, latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction, heading))
+	
 
         database.commit()
 
