@@ -46,15 +46,16 @@
     <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar1" android:layout_above="@+id/button"
-            android:layout_marginBottom="81dp"
-            android:layout_alignParentStart="true" android:max="10" android:indeterminate="false"
-            android:layout_toStartOf="@+id/textView2" android:progress="5"/>
+            android:id="@+id/seekBar1"
+            android:layout_marginBottom="89dp"
+            android:max="8" android:indeterminate="false"
+            android:progress="5" android:layout_above="@+id/button" android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/button"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="5"
-            android:id="@+id/seekBarText" android:layout_alignBottom="@+id/seekBar1"
-            android:layout_toEndOf="@+id/textView2"/>
+            android:id="@+id/seekBarText"
+            android:layout_alignBottom="@+id/seekBar1" android:layout_alignEnd="@+id/textView2"/>
 </RelativeLayout>

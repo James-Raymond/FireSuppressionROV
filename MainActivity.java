@@ -7,10 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import android.widget.SeekBar;
+import android.widget.ProgressBar;
 
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+
+import static android.R.id.progress;
+
 
 public class MainActivity extends Activity {
 
@@ -18,12 +25,11 @@ public class MainActivity extends Activity {
     EditText ipText;
     EditText portText;
     Button button;
-    int progressBar;
     private Socket socket=null;
     private String ipaddress;
     private String port;
-    public PrintWriter pw;
-
+    public int progressBar;
+    public boolean progressFlag = false;
 
 
 
@@ -45,8 +51,12 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-               ipaddress=ipText.getText().toString();
+                System.out.println("Trying to connect");
+
+                ipaddress=ipText.getText().toString();
                 port=portText.getText().toString();
+
+
 
 
 
@@ -60,7 +70,7 @@ public class MainActivity extends Activity {
                                           boolean fromUser) {
                 // TODO Auto-generated method stub
                 text2.setText(String.valueOf(progress));
-                progressBar = progress+2;
+                progressBar = progress+3;
                 try {
                     new AsyncAction().execute();
                 }
@@ -83,29 +93,43 @@ public class MainActivity extends Activity {
             }
         });
 
+
     }
+
     private class AsyncAction extends AsyncTask<String,Void,String>{
+
+        private AsyncAction() throws IOException {
+        }
 
 
         @Override
         protected String doInBackground(String... params) {
             try {
+                System.out.println("Trying to connect");
+                System.out.println("Progress="+getProgress());
+
                 socket = new Socket(ipaddress, Integer.parseInt(port));
+                PrintWriter outToServer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+                System.out.println(getProgress());
+                outToServer.print(getProgress());
+                outToServer.flush();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            PrintWriter outToServer = null;
-            try {
-                outToServer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            outToServer.print(progressBar);
-            outToServer.flush();
             return null;
         }
+
+        public int getProgress() {
+            System.out.println(progressBar);
+
+            return progressBar;
+        }
     }
+
+
+
 }
 
 
