@@ -1,3 +1,4 @@
+#        tcp/h264://my_pi_address:8000/
 #To check if the camera is connected run
 #	vcgencmd get_camera
 #Type into VLC in network stream
@@ -14,7 +15,9 @@ import socket
 import time
 import picamera
 import threading
+import select, string, sys
 
+import RPi.GPIO as GPIO
 
 
 
@@ -39,6 +42,17 @@ class myThread2 (threading.Thread):
                 while True:
                         print "Starting " + self.name
                         camera()
+
+
+class myThread3 (threading.Thread):
+        def __init__(self, threadID, name):
+                threading.Thread.__init__(self)
+                self.threadID = threadID
+                self.name = name
+        def run(self):
+                while True:
+                        print "Starting " + self.name
+                        servo()
 
 # single register from GPM.S
 def get_single(register):
@@ -74,7 +88,7 @@ def camera():
                         camera.framerate = 25
 
                         server_socket = socket.socket()
-                        server_socket.bind(('0.0.0.0',8000))
+                        server_socket.bind(('0.0.0.0',8001))
                         server_socket.listen(0)
 
                         #Accept a single connection and make a file-like object out of it
@@ -143,14 +157,64 @@ def GPS(threadName,delay):
         cursor.execute(''' INSERT INTO `data`( `id`,`time`, `date`, `latitude-degrees`, `latitude-minutes`, `latitude-direction`, `longitude-degrees`, `longitude-minutes`, `longitude-direction`, `heading`) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s ) ''',(id,time_gps, date_gps, latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction, heading))
         database.commit()
         time.sleep(delay)
+def servo():
+        GPIO.setwarnings(False)
 
+        GPIO.setmode(GPIO.BOARD)
+
+        GPIO.setup(18,GPIO.OUT)
+
+        frequencyHertz = 50
+        pwm = GPIO.PWM(18,frequencyHertz)
+
+        msPerCycle = 1000/frequencyHertz
+
+        server_socket = socket.socket()
+        try:
+
+                server_socket.bind(('0.0.0.0',8003))
+        except socket.error as msg:
+                print "Bind Failed. Error Code : ",str(msg[0])+"Message "+msg[1]
+                sys.exit() 
+        server_socket.listen(1)
+
+        #conn,addr = server_socket.accept()
+        while(1):
+
+
+                conn,addr = server_socket.accept()
+                
+                print("connected")
+                #wait to accept a connection - blocking call
+                print 'Connected with ' + addr[0] + ':' + str(addr[1])
+
+                data = conn.recv(1024)
+                print("data is :"+data)
+
+
+                if str(data) != 0 :
+                        print "Postion "+ data     
+                        pwm.start(int(data))
+
+                else: break
+         
+                
+
+                
+        server_socket.close()
+        GPIO.cleanup()
+        
 # Create new threads
 thread1 = myThread(1, "Thread-1")
 thread2 = myThread2(2, "Thread-2")
+thread3 = myThread3(3, "Thread-2")
 
 # Start new Threads
 thread1.start()
 thread2.start()
+thread3.start()
+while True:
+	time.sleep(1)
 
 print "Exiting Main Thread"
 
